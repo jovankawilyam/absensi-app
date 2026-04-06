@@ -1,6 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
+import bg from "../public/logo.png";
+
 
 export default function Home() {
   const [nama, setNama] = useState("");
@@ -43,24 +46,23 @@ export default function Home() {
     setLoading(false);
   };
 
+  
   return (
     <main className="container">
+      <img src="/logo.png" alt="Logo" className="logo-luar" />
       <div className="card">
-        <h2>ABSENSI</h2>
-
+        <h2 className="title">ABSENSI</h2>
         <input
           type="text"
           placeholder="Masukkan nama"
           value={nama}
           onChange={(e) => setNama(e.target.value)}
         />
-        <div className="select-wrapper">
         <select value={status} onChange={(e) => setStatus(e.target.value)}>
           <option value="Hadir">Hadir</option>
           <option value="Izin">Izin</option>
           <option value="Sakit">Sakit</option>
         </select>
-        </div>
 
         <button onClick={kirim} disabled={loading}>
           {loading ? "Loading..." : "Submit"}
@@ -73,9 +75,33 @@ export default function Home() {
         .container {
           min-height: 100vh;
           display: flex;
+          flex-direction: column;
           justify-content: center;
           align-items: center;
           background: linear-gradient(135deg, #6d3914, #d7bda6);
+          gap: 1rem;
+        }
+
+        .header {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 0.5rem;
+        }
+
+        .logo-luar {
+          width: 120px;
+          height: auto;
+          max-width: 150px;
+        }
+
+        .title {
+          text-align: center;
+          color: #4c2b08;
+          text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+          font-weight: bold;
+          font-size: 2rem;
+          margin: 0;
         }
 
         .card {
@@ -87,19 +113,13 @@ export default function Home() {
           box-shadow: 0 20px 40px rgba(0,0,0,0.2);
         }
 
-        h2 {
-          text-align: center;
-          color: #4c2b08;
-          text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-          font-weight: bold;
-        }
-
         input, select, button {
           width: 100%;
           padding: 14px;
           margin-top: 12px;
           border-radius: 10px;
           border: 3px solid #4c2b08;
+          box-sizing: border-box;
         }
 
         button {
@@ -110,24 +130,41 @@ export default function Home() {
           cursor: pointer;
         }
 
+        button:hover:not(:disabled) {
+          background: #6d3914;
+        }
+
+        button:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+
+        input:focus, select:focus {
+          outline: none;
+          border-color: #6d3914;
+          box-shadow: 0 0 0 3px rgba(109,57,20,0.2);
+        }
+
         .info {
           text-align: center;
           margin-top: 20px;
           color: #4c2b08; 
           font-weight: bold;
-        }
-        
-        .selection-wrapper {
-          position: relative;
+          min-height: 1.5rem;
         }
 
-        input:focus, select:focus {
-        outline: none;
-        border: 2px solid #6d3914;
-
-        @media (max-width: 400px) {
-
-        
+        @media (max-width: 480px) {
+          .logo-luar {
+            width: 100px;
+          }
+          .title {
+            font-size: 1.5rem;
+          }
+          .container {
+            padding: 1rem;
+            gap: 0.5rem;
+          }
+        }
       `}</style>
     </main>
   );
