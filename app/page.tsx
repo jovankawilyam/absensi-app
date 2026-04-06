@@ -8,7 +8,7 @@ export default function Home() {
   const [info, setInfo] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const url = "https://script.google.com/macros/s/AKfycbwbcKli8fUJdTyhfTUiuHcu5gifPiAmXeI8ccjQ3jFV5Ae-KPvfwr1SjkjHirxPJ76lBg/exec";
+  const url = "https://script.google.com/macros/s/AKfycbxMWGCg5BQ2h7IDnJncDSABDKG0VMflY0DHdmz0LBY5J34RPyLsTQNn-TDf-_YD5Ur32Q/exec";
 
   const kirim = async () => {
     if (!nama) {
@@ -46,7 +46,7 @@ export default function Home() {
   return (
     <main className="container">
       <div className="card">
-        <h2>Absensi</h2>
+        <h2>ABSENSI</h2>
 
         <input
           type="text"
@@ -54,12 +54,13 @@ export default function Home() {
           value={nama}
           onChange={(e) => setNama(e.target.value)}
         />
-
+        <div className="select-wrapper">
         <select value={status} onChange={(e) => setStatus(e.target.value)}>
           <option value="Hadir">Hadir</option>
           <option value="Izin">Izin</option>
           <option value="Sakit">Sakit</option>
         </select>
+        </div>
 
         <button onClick={kirim} disabled={loading}>
           {loading ? "Loading..." : "Submit"}
@@ -74,13 +75,13 @@ export default function Home() {
           display: flex;
           justify-content: center;
           align-items: center;
-          background: linear-gradient(135deg, #667eea, #764ba2);
+          background: linear-gradient(135deg, #6d3914, #d7bda6);
         }
 
         .card {
           width: 90%;
           max-width: 350px;
-          background: black;
+          background: #b7957f;
           padding: 24px;
           border-radius: 20px;
           box-shadow: 0 20px 40px rgba(0,0,0,0.2);
@@ -88,19 +89,22 @@ export default function Home() {
 
         h2 {
           text-align: center;
+          color: #4c2b08;
+          text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+          font-weight: bold;
         }
 
         input, select, button {
           width: 100%;
           padding: 14px;
           margin-top: 12px;
-          border-radius: 12px;
-          border: 1px solid #ddd;
+          border-radius: 10px;
+          border: 3px solid #4c2b08;
         }
 
         button {
-          background: #667eea;
-          color: white;
+          background: #4c2b08;
+          color: #d7bda6;
           border: none;
           font-weight: bold;
           cursor: pointer;
@@ -109,7 +113,21 @@ export default function Home() {
         .info {
           text-align: center;
           margin-top: 20px;
+          color: #4c2b08; 
+          font-weight: bold;
         }
+        
+        .selection-wrapper {
+          position: relative;
+        }
+
+        input:focus, select:focus {
+        outline: none;
+        border: 2px solid #6d3914;
+
+        @media (max-width: 400px) {
+
+        
       `}</style>
     </main>
   );
