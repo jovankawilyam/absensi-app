@@ -8,7 +8,7 @@ import jwt from 'jsonwebtoken'
 
 const JWT_SECRET = process.env.JWT_SECRET || 'change_this_secret_in_production'
 
-export async function POST(request) {
+export async function POST(request: Request) {
 	try {
 		const body = await request.json()
 		const { username, password } = body || {}
