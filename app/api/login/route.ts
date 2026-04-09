@@ -44,10 +44,13 @@ export async function POST(request: Request) {
 
 		return res
 	} catch (err) {
+		// Pastikan kita mengambil pesan error dengan aman
+		const errorMessage = err instanceof Error ? err.message : String(err);
+
 		return NextResponse.json(
-			{ message: 'Invalid request' , error: err?.message ?? String(err) },
+			{ message: 'Invalid request', error: errorMessage },
 			{ status: 400 }
-		)
+		);
 	}
 }
 
