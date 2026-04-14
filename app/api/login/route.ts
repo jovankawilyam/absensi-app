@@ -3,55 +3,66 @@ import jwt from 'jsonwebtoken'
 
 // POST /api/login
 // Expects JSON body: { username, password }
-// If credentials match (admin / 123) issues a JWT (1 hour) and sets it as an
-// httpOnly cookie at path "/". On failure returns 401 with an error message.
 
 const JWT_SECRET = process.env.JWT_SECRET || 'change_this_secret_in_production'
 
+// --- TAMBAH ADMIN DI SINI ---
+const ALLOWED_ADMINS = [
+    { user: 'admin', pass: '123' },
+    { user: 'budi', pass: 'kopi123' }, // Admin baru 1
+    { user: 'siti', pass: 'rahasia' }  // Admin baru 2
+];
+// ----------------------------
+
 export async function POST(request: Request) {
-	try {
-		const body = await request.json()
-		const { username, password } = body || {}
+    try {
+        const body = await request.json()
+        const { username, password } = body || {}
 
-		if (!username || !password) {
-			return NextResponse.json(
-				{ message: 'Username and password are required' },
-				{ status: 400 }
-			)
-		}
+        if (!username || !password) {
+            return NextResponse.json(
+                { message: 'Username and password are required' },
+                { status: 400 }
+            )
+        }
 
-		// Simple credential check (as requested)
-		if (!(username === 'admin' && password === '123')) {
-			return NextResponse.json(
-				{ message: 'Invalid username or password' },
-				{ status: 401 }
-			)
-		}
+        // Cari apakah user & password ada yang cocok di daftar ALLOWED_ADMINS
+        const validUser = ALLOWED_ADMINS.find(
+            (admin) => admin.user === username && admin.pass === password
+        );
 
-		// Create JWT (expires in 1 hour)
-		const token = jwt.sign({ username }, JWT_SECRET, { expiresIn: '1h' })
+        // Jika tidak ditemukan yang cocok
+        if (!validUser) {
+            return NextResponse.json(
+                { message: 'Invalid username or password' },
+                { status: 401 }
+            )
+        }
 
-		// Set cookie (httpOnly)
-		const res = NextResponse.json({ success: true, message: 'Logged in' })
-		// maxAge in seconds (1 hour)
-		res.cookies.set('token', token, {
-			httpOnly: true,
-			path: '/',
-			maxAge: 60 * 60,
-			sameSite: 'lax',
-			secure: process.env.NODE_ENV === 'production',
-		})
+        // Create JWT (expires in 1 hour)
+        // Pakai validUser.user supaya lebih dinamis sesuai siapa yang login
+        const token = jwt.sign({ username: validUser.user }, JWT_SECRET, { expiresIn: '1h' })
 
-		return res
-	} catch (err) {
-		// Pastikan kita mengambil pesan error dengan aman
-		const errorMessage = err instanceof Error ? err.message : String(err);
+        // Set cookie (httpOnly)
+        const res = NextResponse.json({ success: true, message: 'Logged in' })
+        
+        res.cookies.set('token', token, {
+            httpOnly: true,
+            path: '/',
+            maxAge: 60 * 60, // 1 hour
+            sameSite: 'lax',
+            secure: process.env.NODE_ENV === 'production',
+        })
 
-		return NextResponse.json(
-			{ message: 'Invalid request', error: errorMessage },
-			{ status: 400 }
-		);
-	}
+        return res
+    } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : String(err);
+
+        return NextResponse.json(
+            { message: 'Invalid request', error: errorMessage },
+            { status: 400 }
+        );
+    }
 }
 
 export const runtime = 'nodejs'

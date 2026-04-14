@@ -44,7 +44,7 @@ export default function LoginPage() {
       <Image src="/logo.png" alt="Logo" width={120} height={120} className="logo-luar" />
 
       <form onSubmit={submit} className="card">
-        <h2 className="title">Login</h2>
+        <h2 className="title">LOGIN</h2>
 
         <input
           placeholder="Username"
